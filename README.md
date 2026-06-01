@@ -62,18 +62,6 @@ It's freemium: the free version (this repo) is fully functional. A separate **Pr
 
 ---
 
-## Screenshots
-
-> Add screenshots to `assets/screenshots/` and reference here. Suggested set:
->
-> - `01-plugins-tab.png` — Plugins tab with role checkboxes
-> - `02-cpt-tab.png` — CPT tab with native capability info
-> - `03-matrix.png` — Access Matrix
-> - `04-tools.png` — Export/Import/Uninstall
-> - `05-dashboard-widget.png` — Dashboard widget
-
----
-
 ## Installation
 
 ### From wp-admin (recommended)
