@@ -205,9 +205,10 @@ Pricing tiers (one license, no Personal/Business/Agency separation):
 
 | Plan | Price | Sites |
 |---|---|---|
-| **Monthly** | €7 / month | up to 5 sites |
-| **Yearly** | €49 / year | up to 10 sites |
-| **Lifetime** | €149 once | up to 25 sites |
+| **Yearly** | $80 / year | up to 8 sites |
+| **Lifetime** | $224 once | up to 24 sites |
+
+A future **Qaiyo All-Access** bundle ($179/year, $499 lifetime) will cover every Qaiyo Pro plugin under a single license.
 
 License management lives at `Access Manager → License` (added automatically by the SDK as a submenu).
 
