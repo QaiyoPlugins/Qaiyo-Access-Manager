@@ -1,0 +1,267 @@
+# German translation for Qaiyo Access Manager
+# Copyright (C) 2026 Papp Ádám
+msgid ""
+msgstr ""
+"Project-Id-Version: Qaiyo Access Manager 1.0.0\n"
+"Report-Msgid-Bugs-To: https://qaiyo-plugins.com\n"
+"POT-Creation-Date: 2026-05-20 00:00+0000\n"
+"PO-Revision-Date: 2026-05-20 00:00+0000\n"
+"Last-Translator: Papp Ádám\n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Qaiyo Access Manager"
+msgstr "Qaiyo Access Manager"
+
+msgid "Access Manager"
+msgstr "Zugriffsverwaltung"
+
+msgid "Activate/Deactivate"
+msgstr "Aktivieren/Deaktivieren"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Install"
+msgstr "Installieren"
+
+msgid "Update"
+msgstr "Aktualisieren"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Publish"
+msgstr "Veröffentlichen"
+
+msgid "Edit others"
+msgstr "Andere bearbeiten"
+
+msgid "Read private"
+msgstr "Private lesen"
+
+msgid "Create"
+msgstr "Erstellen"
+
+msgid "Saving..."
+msgstr "Speichern..."
+
+msgid "Settings saved!"
+msgstr "Einstellungen gespeichert!"
+
+msgid "An error occurred while saving."
+msgstr "Beim Speichern ist ein Fehler aufgetreten."
+
+msgid "Search user..."
+msgstr "Benutzer suchen..."
+
+msgid "Allowed"
+msgstr "Erlaubt"
+
+msgid "Denied"
+msgstr "Verweigert"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "No results"
+msgstr "Keine Ergebnisse"
+
+msgid "Save settings"
+msgstr "Einstellungen speichern"
+
+msgid "You do not have permission to perform this action."
+msgstr "Sie haben keine Berechtigung für diese Aktion."
+
+msgid "You do not have permission to access this content type."
+msgstr "Sie haben keine Berechtigung für diesen Inhaltstyp."
+
+msgid "Some plugins are hidden because your access is restricted. Contact your administrator for more access."
+msgstr "Einige Plugins sind ausgeblendet, da Ihr Zugriff eingeschränkt ist. Wenden Sie sich an Ihren Administrator."
+
+msgid "You do not have permission to access this page."
+msgstr "Sie haben keine Berechtigung für diese Seite."
+
+msgid "Control plugin and content type access at role and user level. Administrators always have full access."
+msgstr "Steuern Sie den Zugriff auf Plugins und Inhaltstypen auf Rollen- und Benutzerebene. Administratoren haben immer vollen Zugriff."
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Content Types (CPT)"
+msgstr "Inhaltstypen (CPT)"
+
+msgid "Search..."
+msgstr "Suchen..."
+
+msgid "Expand all"
+msgstr "Alle aufklappen"
+
+msgid "Collapse all"
+msgstr "Alle zuklappen"
+
+msgid "No plugins installed to manage."
+msgstr "Keine Plugins zur Verwaltung installiert."
+
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Inactive"
+msgstr "Inaktiv"
+
+msgid "Restricted"
+msgstr "Eingeschränkt"
+
+msgid "Default WordPress Capabilities"
+msgstr "Standard-WordPress-Berechtigungen"
+
+msgid "Role-based access"
+msgstr "Rollenbasierter Zugriff"
+
+msgid "If no role is selected, the item remains accessible to everyone."
+msgstr "Wenn keine Rolle ausgewählt ist, bleibt das Element für alle zugänglich."
+
+msgid "Select all"
+msgstr "Alle auswählen"
+
+msgid "Deselect all"
+msgstr "Alle abwählen"
+
+msgid "User-level override"
+msgstr "Benutzerebene-Überschreibung"
+
+msgid "Individual allow or deny that overrides role-based rules. Administrators cannot be listed."
+msgstr "Individuelle Erlaubnis oder Verweigerung, die rollenbasierte Regeln überschreibt. Administratoren können nicht aufgelistet werden."
+
+msgid "Search user (name, email, login)..."
+msgstr "Benutzer suchen (Name, E-Mail, Login)..."
+
+msgid "No custom post types registered."
+msgstr "Keine benutzerdefinierten Inhaltstypen registriert."
+
+msgid "Public"
+msgstr "Öffentlich"
+
+msgid "Singular:"
+msgstr "Singular:"
+
+msgid "Archive:"
+msgstr "Archiv:"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "Qaiyo Access Manager v%s — Qaiyo by PixelDesigns"
+msgstr "Qaiyo Access Manager v%s — Qaiyo by PixelDesigns"
+
+msgid "Qaiyo Plugins"
+msgstr "Qaiyo Plugins"
+
+msgid "Restricted plugins"
+msgstr "Eingeschränkte Plugins"
+
+msgid "Restricted CPTs"
+msgstr "Eingeschränkte CPTs"
+
+msgid "User overrides"
+msgstr "Benutzerüberschreibungen"
+
+msgid "No access rules configured yet."
+msgstr "Noch keine Zugriffsregeln konfiguriert."
+
+msgid "Manage access rules"
+msgstr "Zugriffsregeln verwalten"
+
+msgid "Access Matrix"
+msgstr "Zugriffsmatrix"
+
+msgid "Tools"
+msgstr "Werkzeuge"
+
+msgid "Plugin access by role"
+msgstr "Plugin-Zugriff nach Rolle"
+
+msgid "Plugin"
+msgstr "Plugin"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Open"
+msgstr "Offen"
+
+msgid "Content type access by role"
+msgstr "Inhaltstyp-Zugriff nach Rolle"
+
+msgid "Content Type"
+msgstr "Inhaltstyp"
+
+msgid "Open (no restriction)"
+msgstr "Offen (keine Einschränkung)"
+
+msgid "Export Settings"
+msgstr "Einstellungen exportieren"
+
+msgid "Download all access rules as a JSON file. Use this to create a backup or transfer settings to another site."
+msgstr "Laden Sie alle Zugriffsregeln als JSON-Datei herunter. Verwenden Sie dies für Backups oder zum Übertragen auf eine andere Website."
+
+msgid "Export to JSON"
+msgstr "Als JSON exportieren"
+
+msgid "Import Settings"
+msgstr "Einstellungen importieren"
+
+msgid "Upload a previously exported JSON file to restore or apply access rules. This will overwrite current settings."
+msgstr "Laden Sie eine zuvor exportierte JSON-Datei hoch, um Zugriffsregeln wiederherzustellen. Dies überschreibt die aktuellen Einstellungen."
+
+msgid "Choose file or drag & drop"
+msgstr "Datei auswählen oder hierher ziehen"
+
+msgid "Import"
+msgstr "Importieren"
+
+msgid "Exporting..."
+msgstr "Exportieren..."
+
+msgid "Export complete!"
+msgstr "Export abgeschlossen!"
+
+msgid "Importing..."
+msgstr "Importieren..."
+
+msgid "Settings imported successfully! Reloading..."
+msgstr "Einstellungen erfolgreich importiert! Wird neu geladen..."
+
+msgid "Import failed."
+msgstr "Import fehlgeschlagen."
+
+msgid "Invalid file. Please select a .json file exported from Qaiyo Access Manager."
+msgstr "Ungültige Datei. Bitte wählen Sie eine von Qaiyo Access Manager exportierte .json-Datei."
+
+msgid "This will overwrite all current access rules. Continue?"
+msgstr "Dies überschreibt alle aktuellen Zugriffsregeln. Fortfahren?"
+
+msgid "No import data received."
+msgstr "Keine Importdaten empfangen."
+
+msgid "Invalid import file. Please use a file exported from Qaiyo Access Manager."
+msgstr "Ungültige Importdatei. Bitte verwenden Sie eine von Qaiyo Access Manager exportierte Datei."
+
+msgid "Settings imported successfully!"
+msgstr "Einstellungen erfolgreich importiert!"
+
+msgid "Uninstall behavior"
+msgstr "Deinstallationsverhalten"
+
+msgid "Choose what happens when you delete this plugin from the Plugins page."
+msgstr "Wählen Sie, was passiert, wenn Sie dieses Plugin von der Plugins-Seite löschen."
+
+msgid "Delete all access rules and settings from the database when the plugin is deleted"
+msgstr "Alle Zugriffsregeln und Einstellungen aus der Datenbank löschen, wenn das Plugin gelöscht wird"
+
+msgid "If unchecked (default), your rules are preserved so they are restored if you reinstall the plugin."
+msgstr "Wenn nicht aktiviert (Standard), bleiben Ihre Regeln erhalten und werden bei einer Neuinstallation wiederhergestellt."
