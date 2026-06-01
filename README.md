@@ -35,29 +35,47 @@ It's freemium: the free version (this repo) is fully functional. A separate **Pr
 
 ## Features
 
-### Core access control
-- **Plugin-level access** — pick which roles can see each installed plugin on the Plugins page; restricted users see a filtered list and lose Activate/Deactivate/Edit/Delete actions on plugins they can't manage.
-- **CPT-level access** — restrict any Custom Post Type per role across the admin menu, list tables, edit screens, REST API responses, frontend single/archive pages, and `map_meta_cap` checks.
-- **User-level overrides** — explicitly *allow* or *deny* specific users for any plugin or CPT, overriding their role rules. Useful for one-off exceptions ("editor X may manage WooCommerce only", "subscriber Y must access the team area").
-- **Native capability info** — every plugin/CPT card shows which built-in WordPress roles already have the related capabilities, so you can see at a glance whether you're tightening or duplicating.
-- **Administrator safety** — admins always have full access; they cannot be added to the user-level deny list.
+### Free vs Pro at a glance
 
-### Tools tab
-- **JSON Export** — download all rules as a versioned JSON file (timestamped filename) for backup or site-to-site transfer.
-- **JSON Import** — drag-and-drop or file-picker; validates the file is from this plugin, confirms before overwriting, auto-reloads.
-- **Uninstall behavior toggle** — opt in to delete all rules from the database on uninstall, or keep them (default) for safe reinstalls.
+| Category | Feature | Free | Pro |
+|---|---|:---:|:---:|
+| **Access control** | Per-role plugin access | ✅ | ✅ |
+| | Per-role CPT access (admin + REST + frontend) | ✅ | ✅ |
+| | Per-user *allow* override | ✅ | ✅ |
+| | Per-user *deny* override | ✅ | ✅ |
+| | Native WP capability info display | ✅ | ✅ |
+| | Administrator safety lock | ✅ | ✅ |
+| **Tools tab** | JSON Export (backup / migration) | ✅ | ✅ |
+| | JSON Import (drag & drop, validated) | ✅ | ✅ |
+| | Uninstall behavior toggle (keep / delete data) | ✅ | ✅ |
+| **Access Matrix** | Read-only bird's-eye matrix | ✅ | ✅ |
+| | **Click-to-edit matrix cells** | — | ✅ |
+| **Rule presets** | Save current rule set under a name | — | ✅ |
+| | Apply preset with one click | — | ✅ |
+| **User groups** | Custom groups beyond WP roles | — | ✅ |
+| | Group-level allow rules (additive) | — | ✅ |
+| **Bulk actions** | Multi-select plugins / CPTs | — | ✅ |
+| | Apply or clear roles in bulk | — | ✅ |
+| **Dashboard** | Live stats widget (3 counters) | ✅ | ✅ |
+| **Admin UX** | AJAX save, no reloads | ✅ | ✅ |
+| | Live search + expand/collapse | ✅ | ✅ |
+| | Restricted-user notice on Plugins page | ✅ | ✅ |
+| | Brand menu grouping (Qaiyo plugin family) | ✅ | ✅ |
+| **i18n** | 5 built-in languages (EN/HU/DE/FR/ES) | ✅ | ✅ |
+| | WPML / Polylang / TranslatePress compatibility | ✅ | ✅ |
+| **WP.org** | Plugin Check compliant | ✅ | n/a |
+| **Auto-updates** | Built-in via Qaiyo Licensing Server | — | ✅ |
 
-### Access Matrix
-- Read-only **bird's-eye matrix view** showing all plugins and CPTs as rows, roles as columns, and `✓ / ✕ / ●` per cell — instantly see who has access to what without expanding individual cards.
+### Counts
 
-### Dashboard widget
-- WP Dashboard widget with three live stats (Restricted plugins, Restricted CPTs, User overrides) and a one-click jump to the management page.
-
-### Other quality-of-life
-- **AJAX save** — no page reloads.
-- **Live search and expand/collapse** on the plugin/CPT lists.
-- **Restricted-user notice** on the Plugins page explaining why some entries are hidden.
-- **Brand menu grouping** — when you have multiple Qaiyo plugins, they appear together under a single "QAIYO PLUGINS" chip in the admin sidebar.
+| | Free | Pro adds |
+|---|:---:|:---:|
+| Admin tabs | **4** | **+2** (Presets, Groups) |
+| Distinct features | **15** | **+8** |
+| Tools | **3** | **+3** (editable matrix, presets, bulk) |
+| Access rule layers | **2** (role, user) | **+1** (groups) |
+| Languages | **5** | **5** |
+| Translation plugin integrations | **3** | **3** |
 
 ---
 
