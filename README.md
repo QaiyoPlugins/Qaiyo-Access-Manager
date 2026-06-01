@@ -19,7 +19,6 @@ It's freemium: the free version (this repo) is fully functional. A separate **Pr
 ## Table of Contents
 
 - [Features](#features)
-- [Screenshots](#screenshots)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [How access decisions work](#how-access-decisions-work)
