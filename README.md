@@ -1,86 +1,288 @@
 # Qaiyo Access Manager
 
-WordPress plugin for fine-grained access control over plugins and custom post types — per role or per individual user.
+> Fine-grained plugin and Custom Post Type access control for WordPress — at the role **and** individual user level.
 
-**Version:** 1.0.0
+[![WordPress](https://img.shields.io/badge/WordPress-5.8%2B-blue.svg)](https://wordpress.org/)
+[![PHP](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://www.php.net/)
+[![License: GPL v2+](https://img.shields.io/badge/License-GPLv2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0)
+[![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)](#)
 
-**Author:** PixelDesigns
+Qaiyo Access Manager extends WordPress's built-in role/capability system with two missing pieces every real-world site needs:
 
-**License:** GPL-2.0-or-later
+1. **Choose which plugins each role/user can see and manage** — without writing code or modifying `wp-config.php`.
+2. **Restrict any Custom Post Type** (WooCommerce Products, ACF, custom CPTs, etc.) per role or per user — admin UI, REST API and frontend together.
 
-**Requires:** WordPress 5.8+, PHP 7.4+
+It's freemium: the free version (this repo) is fully functional. A separate **Pro add-on** unlocks an editable access matrix, presets, user groups, and bulk actions.
 
 ---
 
-## What it does
+## Table of Contents
 
-WordPress roles give you broad strokes. Qaiyo Access Manager gives you the detail work.
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [How access decisions work](#how-access-decisions-work)
+- [Translation plugin compatibility](#translation-plugin-compatibility)
+- [Translations](#translations)
+- [Developer hooks](#developer-hooks-for-pro--customisation)
+- [Uninstall behavior](#uninstall-behavior)
+- [Pro version](#pro-version)
+- [WordPress.org compliance](#wordpressorg-compliance)
+- [Changelog](#changelog)
+- [Credits](#credits--license)
 
-You can restrict which roles can see installed plugin menus, which roles can access any custom post type, and then override both of those rules for specific users. None of this touches WordPress core capabilities — the plugin intercepts at the menu and CPT access layer.
+---
 
 ## Features
 
-| Feature | Details |
-|---|---|
-| Plugin access control | Hide admin menu entries per role |
-| CPT access control | Restrict any registered post type per role |
-| User-level overrides | Grant or block individual users, overrides role setting |
-| Capability display | See native WP capabilities for every item |
-| Admin safety lock | Administrator role is always protected |
-| AJAX save | No page reload on settings changes |
-| Languages | EN, HU, DE, FR, ES (auto-detect) |
-| Multilingual plugins | WPML, Polylang, TranslatePress |
-| Uninstall | uninstall.php cleans all stored options |
-| Security | Nonce, capability check, sanitize, escape throughout |
+### Core access control
+- **Plugin-level access** — pick which roles can see each installed plugin on the Plugins page; restricted users see a filtered list and lose Activate/Deactivate/Edit/Delete actions on plugins they can't manage.
+- **CPT-level access** — restrict any Custom Post Type per role across the admin menu, list tables, edit screens, REST API responses, frontend single/archive pages, and `map_meta_cap` checks.
+- **User-level overrides** — explicitly *allow* or *deny* specific users for any plugin or CPT, overriding their role rules. Useful for one-off exceptions ("editor X may manage WooCommerce only", "subscriber Y must access the team area").
+- **Native capability info** — every plugin/CPT card shows which built-in WordPress roles already have the related capabilities, so you can see at a glance whether you're tightening or duplicating.
+- **Administrator safety** — admins always have full access; they cannot be added to the user-level deny list.
+
+### Tools tab
+- **JSON Export** — download all rules as a versioned JSON file (timestamped filename) for backup or site-to-site transfer.
+- **JSON Import** — drag-and-drop or file-picker; validates the file is from this plugin, confirms before overwriting, auto-reloads.
+- **Uninstall behavior toggle** — opt in to delete all rules from the database on uninstall, or keep them (default) for safe reinstalls.
+
+### Access Matrix
+- Read-only **bird's-eye matrix view** showing all plugins and CPTs as rows, roles as columns, and `✓ / ✕ / ●` per cell — instantly see who has access to what without expanding individual cards.
+
+### Dashboard widget
+- WP Dashboard widget with three live stats (Restricted plugins, Restricted CPTs, User overrides) and a one-click jump to the management page.
+
+### Other quality-of-life
+- **AJAX save** — no page reloads.
+- **Live search and expand/collapse** on the plugin/CPT lists.
+- **Restricted-user notice** on the Plugins page explaining why some entries are hidden.
+- **Brand menu grouping** — when you have multiple Qaiyo plugins, they appear together under a single "QAIYO PLUGINS" chip in the admin sidebar.
+
+---
+
+## Screenshots
+
+> Add screenshots to `assets/screenshots/` and reference here. Suggested set:
+>
+> - `01-plugins-tab.png` — Plugins tab with role checkboxes
+> - `02-cpt-tab.png` — CPT tab with native capability info
+> - `03-matrix.png` — Access Matrix
+> - `04-tools.png` — Export/Import/Uninstall
+> - `05-dashboard-widget.png` — Dashboard widget
+
+---
 
 ## Installation
 
-1. Upload the `qaiyo-access-manager` folder to `/wp-content/plugins/`
-2. Activate through **Plugins → Installed Plugins**
-3. Go to **Settings → Qaiyo Access Manager**
+### From wp-admin (recommended)
+1. Plugins → Add New → Upload the ZIP from [Releases](../../releases) (or build it yourself).
+2. Activate.
+3. Navigate to **Access Manager** in the sidebar.
 
-Or install directly from the WordPress.org plugin directory.
+### Manual
+1. Drop the unzipped folder into `wp-content/plugins/`.
+2. Activate from the Plugins page.
 
-## Usage
+### Requirements
+| | Minimum |
+|---|---|
+| WordPress | 5.8 |
+| PHP | 7.4 |
+| Capability needed to configure | `manage_options` |
 
-### Role-based plugin restrictions
+---
 
-In the plugin settings, you'll see a list of all installed plugins. For each one, you can select which roles should have access. Roles without access won't see the plugin's admin menu entries.
+## Configuration
 
-### CPT restrictions
+After activation a top-level **Access Manager** menu appears (under the shared "Qaiyo Plugins" label if you have other Qaiyo plugins).
 
-Same pattern for post types. Select which roles can access each registered CPT. Works with any CPT, including WooCommerce products, ACF-driven types, and your own custom registrations.
+The settings page has 4 tabs:
 
-### User overrides
+| Tab | Purpose |
+|---|---|
+| **Plugins** | Per-plugin role checkboxes + per-user allow/deny |
+| **Content Types (CPT)** | Per-CPT role checkboxes + per-user allow/deny |
+| **Access Matrix** | Read-only overview of all rules |
+| **Tools** | Export / Import / Uninstall behavior |
 
-Under the **User Overrides** tab, search for any user and set explicit allow/deny rules for specific plugins or post types. These override the role setting.
+Click **Save settings** at the bottom — saves via AJAX, no page reload.
 
-### Capability display
+---
 
-Every plugin entry and CPT entry shows the native WordPress capabilities it relies on. This is read-only — it's there so you understand what access the item actually requires before you restrict it.
+## How access decisions work
 
-## Security
+Every access check (plugin visibility, CPT admin menu, edit screen, REST API, frontend, `map_meta_cap`) goes through the same priority chain:
 
-- All settings forms use WordPress nonce verification
-- Save actions check `manage_options` capability
-- All user input is sanitized before storage
-- All output is properly escaped
-
-The Administrator role is hardcoded as exempt. No setting in the UI can restrict administrator access.
-
-## Compatibility
-
-Tested with:
-- WooCommerce 8.x+
-- Advanced Custom Fields (ACF) 6.x+
-- Polylang 3.x+
-- WPML 4.x+
-- TranslatePress 2.x+
-- JetEngine, Toolset, MetaBox
-
-## Development
-
-```bash
-git clone https://github.com/pixeldesigns/qaiyo-access-manager
-cd qaiyo-access-manager
 ```
+1. Administrator?                      → ALLOW (always)
+2. User in deny list for this item?    → DENY
+3. User in allow list for this item?   → ALLOW
+4. Pro: any group rule applies?        → consult Pro filter (group rules ADD access)
+5. Role rule defined for this item?    → ALLOW if any of user's roles is checked
+6. No rule at all?                     → ALLOW (default open)
+```
+
+This means **rules are opt-in**: an item without any rule is freely accessible. As soon as you check even one role, the item becomes restricted to the checked roles + user-level overrides.
+
+---
+
+## Translation plugin compatibility
+
+Plays nicely with major translation plugins out of the box:
+
+- **WPML**, **Polylang**, **TranslatePress** — their internal CPTs (`wp_translation`, `wpml_translation_job`, `polylang_mo`, `trp_translation`, `trp_language`) are excluded from the manageable list so you never accidentally lock yourself out of translations.
+- The plugin's own `pre_get_posts` and `rest_pre_dispatch` filters do **not** interfere with `lang` / `polylang_lang` / `trp_lang` query variables.
+
+---
+
+## Translations
+
+Ships with full translations for 5 locales:
+
+| Locale | Language |
+|---|---|
+| `en_US` | English (source) |
+| `hu_HU` | Hungarian |
+| `de_DE` | German |
+| `fr_FR` | French |
+| `es_ES` | Spanish |
+
+Regional variants (e.g. `de_AT`, `fr_CA`, `es_MX`) automatically fall back to the closest supported locale.
+
+`.mo` files are compiled and committed; `.po` sources are in `languages/`. The text domain is `qaiyo-access-manager` — WordPress 4.6+ auto-loads it from `/languages` without an explicit `load_plugin_textdomain()` call (per the [latest wp.org guidelines](https://make.wordpress.org/core/2024/04/01/i18n-improvements-in-wordpress-6-5/)).
+
+---
+
+## Developer hooks (for Pro / customisation)
+
+The free plugin exposes the following extension points — used by the Pro add-on, available to anyone:
+
+### Filters
+
+| Filter | Args | Purpose |
+|---|---|---|
+| `wpam_group_access_plugin` | `$result = null, $plugin_file, $user` | Allow a 3rd-party (e.g. Pro Groups) to grant/deny plugin access before the role rule runs. Return `null` to pass through, `true`/`false` to decide. |
+| `wpam_group_access_cpt` | `$result = null, $post_type, $user` | Same, but for CPTs. |
+| `wpam_valid_tabs` | `array $tabs` | Register additional valid tab slugs (e.g. `'presets'`, `'groups'`). |
+| `wpam_hide_toolbar_tabs` | `array $tabs` | Tab slugs where the search/expand toolbar + Save bar should be hidden. |
+| `wpam_render_matrix` | `bool $handled, $plugins, $cpts, $roles, $plugin_rules, $cpt_rules` | Replace the default read-only matrix. Return `true` after rendering your own. |
+
+### Actions
+
+| Action | Args | When it fires |
+|---|---|---|
+| `wpam_after_tabs` | `$active_tab` | After all built-in tab `<a>` elements — append your own. |
+| `wpam_toolbar_actions` | `$active_tab` | Inside the toolbar `.wpam-actions` div — append extra buttons. |
+| `wpam_render_tab_content` | `$active_tab, $plugins, $cpts, $roles, $plugin_rules, $cpt_rules` | Render content for a tab the free plugin doesn't know about. |
+| `wpam_after_save_access` | — | After any rule save (AJAX or via Pro flows). |
+
+### Brand menu integration
+
+If you ship a Qaiyo-branded plugin, call:
+
+```php
+if ( class_exists( 'Wpam_Brand_Menu' ) ) {
+    Wpam_Brand_Menu::register_plugin_slug( 'your-plugin-menu-slug' );
+    $position = Wpam_Brand_Menu::plugin_position(); // use as menu_position
+}
+```
+
+The first Qaiyo plugin to load defines `Wpam_Brand_Menu` (or one of `Qt_Brand_Menu`, `Qdp_Brand_Menu`, etc.); the others detect it through the shared `$GLOBALS['qaiyo_brand_menu_slugs']` registry and skip re-injecting the chip. This is the single intentional non-prefixed global in the codebase (documented with a `phpcs:ignore`).
+
+---
+
+## Uninstall behavior
+
+By default, deleting the plugin from the Plugins page **preserves** all access rules in the database — so reinstalling restores everything.
+
+To opt into full deletion: **Tools → Uninstall behavior → check the box**. The setting is stored as `wpam_delete_data_on_uninstall` and is checked by `uninstall.php`. The preference itself is always removed on uninstall (it's plugin-specific metadata).
+
+---
+
+## Pro version
+
+A separate add-on plugin, **Qaiyo Access Manager Pro**, unlocks:
+
+| Feature | What it does |
+|---|---|
+| **Editable Access Matrix** | Click any cell to toggle access. One-click save for all rules at once. |
+| **Rule Presets** | Save the current rule set under a name ("Editor basic", "Shop manager"). Apply with one click. |
+| **User Groups** | Define groups beyond WP roles. Members of a group can access checked items — even if their role couldn't. |
+| **Bulk Actions** | Multi-select plugins/CPTs, apply roles to all at once, or clear rules in bulk. |
+
+Pro is fully optional and installs as a regular WordPress plugin alongside the free version. It auto-updates via the Qaiyo Licensing Server using the shared Qaiyo SDK.
+
+Pricing tiers (one license, no Personal/Business/Agency separation):
+
+| Plan | Price | Sites |
+|---|---|---|
+| **Monthly** | €7 / month | up to 5 sites |
+| **Yearly** | €49 / year | up to 10 sites |
+| **Lifetime** | €149 once | up to 25 sites |
+
+License management lives at `Access Manager → License` (added automatically by the SDK as a submenu).
+
+---
+
+## WordPress.org compliance
+
+The plugin is built to pass the official **Plugin Check** static analyzer without warnings:
+
+- ✅ No `load_plugin_textdomain()` (WP 4.6+ auto-loads).
+- ✅ Class prefixes match the plugin folder slug (`Wpam_`).
+- ✅ Every `$_POST` / `$_GET` access is explicitly `sanitize_text_field( wp_unslash( ... ) )` on its own line so the PHPCS sniffer can see it.
+- ✅ Read-only `$_GET` (tab navigation) has the documented `phpcs:ignore WordPress.Security.NonceVerification.Recommended` exception.
+- ✅ `readme.txt`: max 5 tags, `Tested up to: 7.0`, valid `Stable tag`.
+- ✅ All globals are plugin-prefixed except for one intentional cross-plugin coordination registry (`$GLOBALS['qaiyo_brand_menu_*']`) — documented with `phpcs:ignore` and a comment explaining why prefixing would break the brand menu.
+
+---
+
+## Repository structure
+
+```
+wp-plugin-access-manager/
+├── wp-plugin-access-manager.php   # Main plugin file (Wpam_Access_Manager class)
+├── uninstall.php                  # Conditional cleanup based on user opt-in
+├── readme.txt                     # wp.org plugin readme
+├── README.md                      # This file
+├── includes/
+│   └── class-wpam-brand-menu.php  # Cross-Qaiyo-plugin brand menu grouping
+├── assets/
+│   ├── css/admin.css              # Settings page styles (~730 lines)
+│   └── js/admin.js                # Settings page JS (~430 lines)
+└── languages/
+    ├── qaiyo-access-manager.pot
+    ├── qaiyo-access-manager-{en_US,hu_HU,de_DE,fr_FR,es_ES}.po
+    └── qaiyo-access-manager-{hu_HU,de_DE,fr_FR,es_ES}.mo
+```
+
+---
+
+## Changelog
+
+### 1.0.0 — Initial public release
+- Plugin-level access control per role and per user.
+- CPT-level access control per role and per user (admin menu, list tables, edit, REST, frontend, `map_meta_cap`).
+- Native WordPress capability info display on every card.
+- AJAX-saved settings with live status feedback.
+- 5 languages (EN/HU/DE/FR/ES) with regional fallback.
+- Translation plugin compatibility (WPML/Polylang/TranslatePress internal CPTs excluded).
+- **Tools** tab: JSON Export, JSON Import (with drag-and-drop), Uninstall behavior toggle.
+- **Access Matrix** tab: read-only overview of all rules across plugins/CPTs and roles.
+- Dashboard widget with live stats.
+- Brand menu grouping for the Qaiyo plugin family.
+- Pro-extension hooks (filters and actions) for the optional Qaiyo Access Manager Pro add-on.
+- Full WordPress.org Plugin Check compliance.
+
+---
+
+## Credits & License
+
+**Qaiyo by PixelDesigns**
+🌐 [qaiyo-plugins.com](https://qaiyo-plugins.com) ・ ✉️ [info@qaiyo-plugins.com](mailto:info@qaiyo-plugins.com)
+
+Released under the **GPL v2 or later** — see [`LICENSE`](https://www.gnu.org/licenses/gpl-2.0.html).
+
+If you find a bug or have a feature request, please [open an issue](../../issues). Pull requests welcome.
