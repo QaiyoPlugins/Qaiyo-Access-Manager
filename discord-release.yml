@@ -1,0 +1,19 @@
+name: Discord release notification
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  discord-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send release to Discord
+        uses: SethCohen/github-releases-to-discord@v1
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          color: "5814783"
+          username: "Qaiyo Plugins"
+          footer_title: "Teljes changelog"
+          footer_url: ${{ github.event.release.html_url }}
+          reduce_headings: true
