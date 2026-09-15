@@ -19,6 +19,7 @@ It's freemium: the free version (this repo) is fully functional. A separate **Pr
 ## Table of Contents
 
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [How access decisions work](#how-access-decisions-work)
@@ -41,10 +42,20 @@ It's freemium: the free version (this repo) is fully functional. A separate **Pr
 |---|---|:---:|:---:|
 | **Access control** | Per-role plugin access | ✅ | ✅ |
 | | Per-role CPT access (admin + REST + frontend) | ✅ | ✅ |
+| | **Allow / Deny mode per rule** | ✅ | ✅ |
 | | Per-user *allow* override | ✅ | ✅ |
 | | Per-user *deny* override | ✅ | ✅ |
 | | Native WP capability info display | ✅ | ✅ |
 | | Administrator safety lock | ✅ | ✅ |
+| **Capabilities** | Read-only capability × role inspector | ✅ | ✅ |
+| | Searchable, core vs plugin cap flagging | ✅ | ✅ |
+| **Frontend protection** | `[qaiyo_protect]` content shortcode | ✅ | ✅ |
+| | role / deny / logged_in / cap gating | ✅ | ✅ |
+| **Options** | Login redirect by role | ✅ | ✅ |
+| | Hide admin bar per role (frontend) | ✅ | ✅ |
+| | Plugin / theme update permissions per role | ✅ | ✅ |
+| | Customizable restricted-access notice | ✅ | ✅ |
+| | CPT frontend redirect target (home/404/login/custom) | ✅ | ✅ |
 | **Tools tab** | JSON Export (backup / migration) | ✅ | ✅ |
 | | JSON Import (drag & drop, validated) | ✅ | ✅ |
 | | Uninstall behavior toggle (keep / delete data) | ✅ | ✅ |
@@ -56,6 +67,17 @@ It's freemium: the free version (this repo) is fully functional. A separate **Pr
 | | Group-level allow rules (additive) | — | ✅ |
 | **Bulk actions** | Multi-select plugins / CPTs | — | ✅ |
 | | Apply or clear roles in bulk | — | ✅ |
+| **Temporary access** | Time-limited allow/deny with expiry date | — | ✅ |
+| | Auto-cleanup of expired rules (wp-cron) | — | ✅ |
+| | 24h-before email reminder to affected user | — | ✅ |
+| **Activity log** | Before/after diff for every rule change | — | ✅ |
+| | Paginated, filterable, CSV-exportable | — | ✅ |
+| | Configurable retention (default 90 days) | — | ✅ |
+| **Admin page hiding** | Restrict WP admin menu items by role/user | — | ✅ |
+| | Submenu-level granularity | — | ✅ |
+| | Direct-URL access blocked | — | ✅ |
+| **Email notifications** | On rule change, expiry, weekly digest | — | ✅ |
+| | Multi-recipient, configurable per event | — | ✅ |
 | **Dashboard** | Live stats widget (3 counters) | ✅ | ✅ |
 | **Admin UX** | AJAX save, no reloads | ✅ | ✅ |
 | | Live search + expand/collapse | ✅ | ✅ |
@@ -70,12 +92,26 @@ It's freemium: the free version (this repo) is fully functional. A separate **Pr
 
 | | Free | Pro adds |
 |---|:---:|:---:|
-| Admin tabs | **4** | **+2** (Presets, Groups) |
-| Distinct features | **15** | **+8** |
-| Tools | **3** | **+3** (editable matrix, presets, bulk) |
-| Access rule layers | **2** (role, user) | **+1** (groups) |
+| Admin tabs | **6** (Plugins, CPT, Matrix, Capabilities, Options, Tools) | **+6** (Presets, Groups, Temp, Activity, Pages, Settings) |
+| Distinct features | **~30** | **+20** |
+| Tools | **3** | **+5** (editable matrix, presets, bulk, temp, log export) |
+| Access rule layers | **2** (role, user) | **+2** (groups, temporary) |
+| Scope of restriction | plugins + CPTs | + WP admin menu pages |
+| Auditability | none | full activity log + CSV export |
 | Languages | **5** | **5** |
 | Translation plugin integrations | **3** | **3** |
+
+---
+
+## Screenshots
+
+> Add screenshots to `assets/screenshots/` and reference here. Suggested set:
+>
+> - `01-plugins-tab.png` — Plugins tab with role checkboxes
+> - `02-cpt-tab.png` — CPT tab with native capability info
+> - `03-matrix.png` — Access Matrix
+> - `04-tools.png` — Export/Import/Uninstall
+> - `05-dashboard-widget.png` — Dashboard widget
 
 ---
 
@@ -168,33 +204,34 @@ The free plugin exposes the following extension points — used by the Pro add-o
 
 | Filter | Args | Purpose |
 |---|---|---|
-| `wpam_group_access_plugin` | `$result = null, $plugin_file, $user` | Allow a 3rd-party (e.g. Pro Groups) to grant/deny plugin access before the role rule runs. Return `null` to pass through, `true`/`false` to decide. |
-| `wpam_group_access_cpt` | `$result = null, $post_type, $user` | Same, but for CPTs. |
-| `wpam_valid_tabs` | `array $tabs` | Register additional valid tab slugs (e.g. `'presets'`, `'groups'`). |
-| `wpam_hide_toolbar_tabs` | `array $tabs` | Tab slugs where the search/expand toolbar + Save bar should be hidden. |
-| `wpam_render_matrix` | `bool $handled, $plugins, $cpts, $roles, $plugin_rules, $cpt_rules` | Replace the default read-only matrix. Return `true` after rendering your own. |
+| `qaiyo_access_manager_group_access_plugin` | `$result = null, $plugin_file, $user` | Allow a 3rd-party (e.g. Pro Groups) to grant/deny plugin access before the role rule runs. Return `null` to pass through, `true`/`false` to decide. |
+| `qaiyo_access_manager_group_access_cpt` | `$result = null, $post_type, $user` | Same, but for CPTs. |
+| `qaiyo_access_manager_valid_tabs` | `array $tabs` | Register additional valid tab slugs (e.g. `'presets'`, `'groups'`). |
+| `qaiyo_access_manager_hide_toolbar_tabs` | `array $tabs` | Tab slugs where the search/expand toolbar + Save bar should be hidden. |
+| `qaiyo_access_manager_render_matrix` | `bool $handled, $plugins, $cpts, $roles, $plugin_rules, $cpt_rules` | Replace the default read-only matrix. Return `true` after rendering your own. |
 
 ### Actions
 
 | Action | Args | When it fires |
 |---|---|---|
-| `wpam_after_tabs` | `$active_tab` | After all built-in tab `<a>` elements — append your own. |
-| `wpam_toolbar_actions` | `$active_tab` | Inside the toolbar `.wpam-actions` div — append extra buttons. |
-| `wpam_render_tab_content` | `$active_tab, $plugins, $cpts, $roles, $plugin_rules, $cpt_rules` | Render content for a tab the free plugin doesn't know about. |
-| `wpam_after_save_access` | — | After any rule save (AJAX or via Pro flows). |
+| `qaiyo_access_manager_after_tabs` | `$active_tab` | After all built-in tab `<a>` elements — append your own. |
+| `qaiyo_access_manager_toolbar_actions` | `$active_tab` | Inside the toolbar `.wpam-actions` div — append extra buttons. |
+| `qaiyo_access_manager_render_tab_content` | `$active_tab, $plugins, $cpts, $roles, $plugin_rules, $cpt_rules` | Render content for a tab the free plugin doesn't know about. |
+| `qaiyo_access_manager_before_save_access` | `array $before` | Before rules are written (AJAX save). Receives a snapshot of current option values — used by the Pro activity log for before/after diffs. |
+| `qaiyo_access_manager_after_save_access` | — | After any rule save (AJAX or via Pro flows). |
 
 ### Brand menu integration
 
 If you ship a Qaiyo-branded plugin, call:
 
 ```php
-if ( class_exists( 'Wpam_Brand_Menu' ) ) {
-    Wpam_Brand_Menu::register_plugin_slug( 'your-plugin-menu-slug' );
-    $position = Wpam_Brand_Menu::plugin_position(); // use as menu_position
+if ( class_exists( 'Qaiyo_Access_Manager_Brand_Menu' ) ) {
+    Qaiyo_Access_Manager_Brand_Menu::register_plugin_slug( 'your-plugin-menu-slug' );
+    $position = Qaiyo_Access_Manager_Brand_Menu::plugin_position(); // use as menu_position
 }
 ```
 
-The first Qaiyo plugin to load defines `Wpam_Brand_Menu` (or one of `Qt_Brand_Menu`, `Qdp_Brand_Menu`, etc.); the others detect it through the shared `$GLOBALS['qaiyo_brand_menu_slugs']` registry and skip re-injecting the chip. This is the single intentional non-prefixed global in the codebase (documented with a `phpcs:ignore`).
+The first Qaiyo plugin to load defines `Qaiyo_Access_Manager_Brand_Menu` (or one of `Qt_Brand_Menu`, `Qdp_Brand_Menu`, etc.); the others detect it through the shared `$GLOBALS['qaiyo_brand_menu_slugs']` registry and skip re-injecting the chip. This is the single intentional non-prefixed global in the codebase (documented with a `phpcs:ignore`).
 
 ---
 
@@ -210,12 +247,23 @@ To opt into full deletion: **Tools → Uninstall behavior → check the box**. T
 
 A separate add-on plugin, **Qaiyo Access Manager Pro**, unlocks:
 
+**Tier 1 — Administration & efficiency**
+
 | Feature | What it does |
 |---|---|
 | **Editable Access Matrix** | Click any cell to toggle access. One-click save for all rules at once. |
 | **Rule Presets** | Save the current rule set under a name ("Editor basic", "Shop manager"). Apply with one click. |
 | **User Groups** | Define groups beyond WP roles. Members of a group can access checked items — even if their role couldn't. |
 | **Bulk Actions** | Multi-select plugins/CPTs, apply roles to all at once, or clear rules in bulk. |
+
+**Tier 2 — Security & control**
+
+| Feature | What it does |
+|---|---|
+| **Temporary Access** | Grant a user time-limited allow/deny on a plugin or CPT with an expiry date. Expired rules auto-clean nightly via wp-cron. Affected users get a 24h-before email reminder. |
+| **Activity Log** | Every rule change is logged with before/after diff, who did it, and when. Searchable, paginated, CSV-exportable. Configurable retention (default 90 days). |
+| **Admin Page Hiding** | Restrict any WP admin menu item (Settings, Tools, Comments, custom plugin pages, …) and submenu items by role. Direct-URL access blocked too. |
+| **Email Notifications** | Optional email on every rule change, on temp-access expiry, plus a weekly digest of the activity log. Multi-recipient. |
 
 Pro is fully optional and installs as a regular WordPress plugin alongside the free version. It auto-updates via the Qaiyo Licensing Server using the shared Qaiyo SDK.
 
@@ -237,7 +285,7 @@ License management lives at `Access Manager → License` (added automatically by
 The plugin is built to pass the official **Plugin Check** static analyzer without warnings:
 
 - ✅ No `load_plugin_textdomain()` (WP 4.6+ auto-loads).
-- ✅ Class prefixes match the plugin folder slug (`Wpam_`).
+- ✅ Class prefixes use the full slug-derived prefix (`Qaiyo_Access_Manager` / `QAIYO_ACCESS_MANAGER_` / `qaiyo_access_manager_`). The 3-word slug yields a 3-char acronym (`qam`), which Plugin Check rejects as too short — so the full slug form is used.
 - ✅ Every `$_POST` / `$_GET` access is explicitly `sanitize_text_field( wp_unslash( ... ) )` on its own line so the PHPCS sniffer can see it.
 - ✅ Read-only `$_GET` (tab navigation) has the documented `phpcs:ignore WordPress.Security.NonceVerification.Recommended` exception.
 - ✅ `readme.txt`: max 5 tags, `Tested up to: 7.0`, valid `Stable tag`.
@@ -248,13 +296,13 @@ The plugin is built to pass the official **Plugin Check** static analyzer withou
 ## Repository structure
 
 ```
-wp-plugin-access-manager/
-├── wp-plugin-access-manager.php   # Main plugin file (Wpam_Access_Manager class)
+qaiyo-access-manager/
+├── qaiyo-access-manager.php   # Main plugin file (Qaiyo_Access_Manager class)
 ├── uninstall.php                  # Conditional cleanup based on user opt-in
 ├── readme.txt                     # wp.org plugin readme
 ├── README.md                      # This file
 ├── includes/
-│   └── class-wpam-brand-menu.php  # Cross-Qaiyo-plugin brand menu grouping
+│   └── class-qam-brand-menu.php  # Cross-Qaiyo-plugin brand menu grouping
 ├── assets/
 │   ├── css/admin.css              # Settings page styles (~730 lines)
 │   └── js/admin.js                # Settings page JS (~430 lines)
